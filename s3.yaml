@@ -1,42 +1,31 @@
-AWSTemplateFormatVersion: 2010-09-09
-Resources:
-  S3Bucket:
-    Type: 'AWS::S3::Bucket'
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Simple cloud formation for bucket creation and configuration
+
+Parameters:
+  BucketName: { Type: String, Default: "my-unique-bucket-name-1111" }
+
+Resources:  
+  AccessLogBucket:
+    Type: "AWS::S3::Bucket"
     Properties:
-      AccessControl: PublicRead
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: error.html
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
-  BucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
+      AccessControl: LogDeliveryWrite
+            
+  MainBucket:
+    Type: "AWS::S3::Bucket"
     Properties:
-      PolicyDocument:
-        Id: MyPolicy
-        Version: 2012-10-17
-        Statement:
-          - Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: !Join 
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref S3Bucket
-                - /*
-      Bucket: !Ref S3Bucket
+      BucketName: !Ref BucketName
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LoggingConfiguration:
+        DestinationBucketName: !Ref AccessLogBucket
+
+
 Outputs:
-  WebsiteURL:
-    Value: !GetAtt 
-      - S3Bucket
-      - WebsiteURL
-    Description: URL for website hosted on S3
-  S3BucketSecureURL:
-    Value: !Join 
-      - ''
-      - - 'https://'
-        - !GetAtt 
-          - S3Bucket
-          - DomainName
-    Description: Name of S3 bucket to hold website content
+  MainBucketName:
+    Description: Name of the main bucket
+    Value: !Ref MainBucket
+  LogBucketName:
+    Description: Name of the access log bucket
+    Value: !Ref AccessLogBucket
