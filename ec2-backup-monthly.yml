@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Backup Plan template to back up all resources on a monthly base
+
+Resources:
+BackupPlanWithThinBackups:
+Type: "AWS::Backup::BackupPlan"
+Properties:
+BackupPlan:
+BackupPlanName: "BackupPlanWithThinBackups"
+AdvancedBackupSettings:
+-
+ResourceType: EC2
+BackupOptions:
+WindowsVSS: enabled
+BackupPlanRule:
+-
+RuleName: "RuleForDailyBackups"
+TargetBackupVault: Default
+ScheduleExpression: "cron(0 1 1 * ? *)"
+Lifecycle:
+DeleteAfterDays: 35
+CopyActions:
+-
+DestinationBackupVaultArn: arn:aws:backup:us-west-2:111222333444:backup-vault:Default
+Lifecycle:
+DeleteAfterDays: 14
+TagBasedBackupSelection:
+Type: "AWS::Backup::BackupSelection"
+Properties:
+BackupSelection:
+SelectionName: "TagBasedBackupSelection"
+IamRoleArn: !Sub "arn:aws:iam::111222333444:role/service-role/AWSBackupDefaultServiceRole"
+ListOfTags:
+-
