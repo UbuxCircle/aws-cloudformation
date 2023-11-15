@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creation of a VPC and one Subnet for Cloud9 IDE and CodeCommit
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 172.200.201.0/24
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+     # Tags:
+     #   - Service: String 
+     #     Value: sharedservice
+     #   - Environment: String
+     #     Value: sandbox
+     #   - tcontact: String
+     #     Value: oliver.kreis@condor.com
+
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 172.200.201.0/27
+      AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list       
+      
+  

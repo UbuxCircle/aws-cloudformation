@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A simple EC2 instance
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0bf8e703278ea0245
+      InstanceType: t2.micro
+      #vpc_security_group_ids=["sg-7cad580b","sg-91edb3e4"]
+      #subnet_id="subnet-e6db8dad"
+        
+  SecurityGroupEC2Instance:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Security Group for EC2   
