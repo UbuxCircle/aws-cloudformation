@@ -9,12 +9,8 @@ Resources:
       EnableDnsHostnames: true
      # Tags:
      #   - Service: String 
-     #     Value: sharedservice
-     #   - Environment: String
-     #     Value: sandbox
-     #   - tcontact: String
-     #     Value: oliver.kreis@condor.com
-
+     #     Value: networking
+  
   PublicSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
